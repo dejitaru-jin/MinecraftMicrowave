@@ -1,0 +1,25 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "microwave:block/microwave_front_on",
+    "top": "microwave:block/microwave_top",
+    "bottom": "microwave:block/microwave_bottom",
+    "front": "microwave:block/microwave_front_on",
+    "back": "microwave:block/microwave_back",
+    "side": "microwave:block/microwave_side"
+  },
+  "elements": [
+    {
+      "from": [1, 0, 2],
+      "to": [15, 10, 14],
+      "faces": {
+        "down": {"uv": [1, 2, 15, 14], "texture": "#bottom", "cullface": "down"},
+        "up": {"uv": [1, 2, 15, 14], "texture": "#top"},
+        "north": {"uv": [1, 6, 15, 16], "texture": "#front"},
+        "south": {"uv": [1, 6, 15, 16], "texture": "#back"},
+        "west": {"uv": [2, 6, 14, 16], "texture": "#side"},
+        "east": {"uv": [2, 6, 14, 16], "texture": "#side"}
+      }
+    }
+  ]
+}
