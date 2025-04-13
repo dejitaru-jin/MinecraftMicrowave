@@ -11,7 +11,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MicrowaveMod.MOD_ID);
 
-    // Update this line to use your custom tab instead of TAB_DECORATIONS
     public static final RegistryObject<Item> MICROWAVE = ITEMS.register("microwave",
             () -> new BlockItem(ModBlocks.MICROWAVE.get(), new Item.Properties().tab(MicrowaveMod.MICROWAVE_TAB)));
 

@@ -4,6 +4,7 @@ import com.example.microwave.init.ModTileEntities;
 import com.example.microwave.tileentity.MicrowaveTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class MicrowaveBlock extends BaseEntityBlock {
@@ -83,19 +85,24 @@ public class MicrowaveBlock extends BaseEntityBlock {
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof MicrowaveTileEntity) {
-            boolean powered = !state.getValue(POWERED);
-            level.setBlock(pos, state.setValue(POWERED, powered), 3);
-            
-            if (powered) {
-                level.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK, SoundSource.BLOCKS, 0.3F, 0.6F);
-            } else {
-                level.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK, SoundSource.BLOCKS, 0.3F, 0.5F);
-            }
-            
+            // Open GUI for the microwave
+            NetworkHooks.openScreen(((ServerPlayer) player), (MicrowaveTileEntity) blockEntity, pos);
             return InteractionResult.CONSUME;
         }
         
         return InteractionResult.PASS;
+    }
+
+    // Method to toggle the powered state (used from GUI)
+    public static void togglePower(Level level, BlockPos pos, BlockState state) {
+        boolean powered = !state.getValue(POWERED);
+        level.setBlock(pos, state.setValue(POWERED, powered), 3);
+        
+        if (powered) {
+            level.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK, SoundSource.BLOCKS, 0.3F, 0.6F);
+        } else {
+            level.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK, SoundSource.BLOCKS, 0.3F, 0.5F);
+        }
     }
 
     @Override
@@ -107,6 +114,17 @@ public class MicrowaveBlock extends BaseEntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new MicrowaveTileEntity(pos, state);
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof MicrowaveTileEntity) {
+                ((MicrowaveTileEntity) blockEntity).drops();
+            }
+        }
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Nullable
