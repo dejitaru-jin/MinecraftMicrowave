@@ -44,6 +44,14 @@ minecraft {
     }
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.1.7'
 }
@@ -60,6 +68,12 @@ jar {
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+ 
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 publishing {
